@@ -30,24 +30,27 @@ const Login = () => (
                 'is-invalid': errors.password,
             });
             return (
-                <div className="row justify-content-md-center">
-                    <Form className="needs-validation col-md-4">
-                        <div className="form-group">
-                            <label htmlFor="login">Логин</label>
-                            <Field type="text" name="login" className={loginClasses} />
-                            <ErrorMessage name="login" component="div" className="invalid-feedback" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="password">Пароль</label>
-                            <Field type="password" name="password" className={passwordClasses} />
-                            <ErrorMessage name="password" component="div" className="invalid-feedback" />
-                        </div>
-                        <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                            Войти
-                        </button>
-                    </Form>
+                <div className="container">
+                    <div className="row justify-content-md-center">
+                        <h3>Вход</h3>
+                    </div>
+                    <div className="row justify-content-md-center">
+                        <Form className="needs-validation col-md-4">
+                            <div className="form-group">
+                                <Field type="text" name="login" className={loginClasses} placeholder="логин" required />
+                                <ErrorMessage name="login" component="div" className="invalid-feedback" />
+                            </div>
+                            <div className="form-group">
+                                <Field type="password" name="password" className={passwordClasses} placeholder="пароль" required />
+                                <ErrorMessage name="password" component="div" className="invalid-feedback" />
+                            </div>
+                            <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+                                Войти
+                            </button>
+                        </Form>
+                    </div>
                 </div>
-            )
+            );
         }}
     </Formik>
 );
