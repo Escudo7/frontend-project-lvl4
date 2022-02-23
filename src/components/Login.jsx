@@ -1,55 +1,75 @@
 import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import {
+  Formik,
+  Form,
+  Field,
+  ErrorMessage,
+} from 'formik';
 import * as Yup from 'yup';
 import classNames from 'classnames';
+import _ from 'lodash';
 
 const loginSchema = Yup.object().shape({
-    login: Yup.string()
-        .required('Обязательное поле'),
-    password: Yup.string()
-        .required('Обязятельное поле'),
+  username: Yup.string()
+    .required('Обязательное поле'),
+  password: Yup.string()
+    .required('Обязятельное поле'),
 });
 
-const Login = () => (
+const Login = () => {
+  const navigate = useNavigate();
+
+  return (
     <Formik
-        initialValues={{ login: '', password: '' }}
-        onSubmit={(values, { resetForm, setSubmitting }) => {
-            console.log(values)
-            setTimeout(() => {
-                setSubmitting(false);
-                //resetForm();
-            }, 400);
-        }}
-        validationSchema={loginSchema}
+      initialValues={{ username: '', password: '' }}
+      onSubmit={async (values, { setErrors }) => {
+        try {
+          const { data: { token } } = await axios.post('/api/v1/login', values);
+          localStorage.setItem('chat-token', token);
+          navigate('/');
+        } catch (e) {
+          setErrors({
+            username: '',
+            password: 'Неверные имя пользователя или пароль',
+          });
+        }
+      }}
+      validationSchema={loginSchema}
     >
-        {({ isSubmitting, errors }) => {
-            const loginClasses = classNames('form-control', {
-                'is-invalid': errors.login,
-            });
-            const passwordClasses = classNames('form-control', {
-                'is-invalid': errors.password,
-            });
-            return (
-                <div className="row justify-content-md-center">
-                    <Form className="needs-validation col-md-4">
-                        <div className="form-group">
-                            <label htmlFor="login">Логин</label>
-                            <Field type="text" name="login" className={loginClasses} />
-                            <ErrorMessage name="login" component="div" className="invalid-feedback" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="password">Пароль</label>
-                            <Field type="password" name="password" className={passwordClasses} />
-                            <ErrorMessage name="password" component="div" className="invalid-feedback" />
-                        </div>
-                        <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                            Войти
-                        </button>
-                    </Form>
+      {({ isSubmitting, errors }) => {
+        const userNameClasses = classNames('form-control', {
+          'is-invalid': _.has(errors, 'username'),
+        });
+        const passwordClasses = classNames('form-control', {
+          'is-invalid': _.has(errors, 'password'),
+        });
+        return (
+          <div className="container">
+            <div className="row justify-content-md-center">
+              <h3>Вход</h3>
+            </div>
+            <div className="row justify-content-md-center">
+              <Form className="needs-validation col-md-4">
+                <div className="form-group">
+                  <Field type="text" name="username" className={userNameClasses} placeholder="логин" required />
+                  <ErrorMessage name="username" component="div" className="invalid-feedback" />
                 </div>
-            )
-        }}
+                <div className="form-group">
+                  <Field type="password" name="password" className={passwordClasses} placeholder="пароль" required />
+                  <ErrorMessage name="password" component="div" className="invalid-feedback" />
+                </div>
+                <button type="submit" disabled={isSubmitting} className="btn btn-primary">
+                  Войти
+                </button>
+              </Form>
+            </div>
+          </div>
+        );
+      }}
     </Formik>
-);
+  );
+};
 
 export default Login;
