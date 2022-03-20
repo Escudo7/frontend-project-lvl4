@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
   Formik,
@@ -10,6 +11,7 @@ import {
 import * as Yup from 'yup';
 import classNames from 'classnames';
 import _ from 'lodash';
+import { logIn } from '../slices/authorizedSlice.js';
 
 const loginSchema = Yup.object().shape({
   username: Yup.string()
@@ -20,6 +22,7 @@ const loginSchema = Yup.object().shape({
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return (
     <Formik
@@ -28,6 +31,7 @@ const Login = () => {
         try {
           const { data: { token } } = await axios.post('/api/v1/login', values);
           localStorage.setItem('chat-token', token);
+          dispatch(logIn());
           navigate('/');
         } catch (e) {
           setErrors({
