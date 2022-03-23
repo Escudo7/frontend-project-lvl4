@@ -18,10 +18,12 @@ const Header = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white">
       <div className="container-fluid ml-3">
-        <a className="navbar-brand" href="#">Hexlet Chat</a>
-        {isAuthorized && <button type="button" className="btn btn-primary mr-3" onClick={onClickHandler}>
-          Выйти
-        </button>}
+        <a className="navbar-brand" href="/">Hexlet Chat</a>
+        {isAuthorized && (
+          <button type="button" className="btn btn-primary mr-3" onClick={onClickHandler}>
+            Выйти
+          </button>
+        )}
       </div>
     </nav>
   );
