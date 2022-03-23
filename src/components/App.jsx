@@ -5,17 +5,15 @@ import NoMatch from './NoMatch.jsx';
 import Main from './Main.jsx';
 import Header from './Header.jsx';
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="login" element={<Login />} />
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
-    </BrowserRouter>
-  );
-};
+const App = () => (
+  <BrowserRouter>
+    <Header />
+    <Routes>
+      <Route path="/" element={<Main />} />
+      <Route path="login" element={<Login />} />
+      <Route path="*" element={<NoMatch />} />
+    </Routes>
+  </BrowserRouter>
+);
 
 export default App;
