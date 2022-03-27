@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -12,16 +12,8 @@ import { logOut } from '../slices/authorizedSlice.js';
 import { loadChannels, setActiveChannelId } from '../slices/channalsSlice.js';
 import { loadMessages } from '../slices/messagesSlice.js';
 
-const Main = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { channels, activeChannelId } = useSelector((state) => state.channels.value);
-  const activeChannel = channels.find((channel) => channel.id === activeChannelId);
-  const messages = useSelector((state) => state.messages.value);
-  const activeChannelMessages = messages.filter((message) => message.channelId === activeChannelId);
-
-  const channelsPrepared = channels.map((channel) => {
+const renderChannels = (channels, activeChannelId) => (
+  channels.map((channel) => {
     const classes = classNames('w-100', 'rounded-0', 'text-left', 'btn', {
       'btn-secondary': channel.id === activeChannelId,
     });
@@ -32,14 +24,38 @@ const Main = () => {
         {channel.name}
       </button>
     );
-  });
+  })
+);
+
+const renderMessages = (messages) => (
+  <div id="messages-box" className="overflow-auto px-5 mr-3">
+    {messages.map((message) => (
+      <div className="text-break mb-2" key={message.id}>
+        <b>{message.userName}</b>
+        {` ${message.body}`}
+      </div>
+    ))}
+  </div>
+);
+
+const Main = ({ socket }) => {
+  const [userName, setUserName] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { channels, activeChannelId } = useSelector((state) => state.channels.value);
+  const activeChannel = channels.find((channel) => channel.id === activeChannelId);
+  const messages = useSelector((state) => state.messages.value);
+  const activeChannelMessages = messages.filter((message) => message.channelId === activeChannelId);
 
   useEffect(() => {
-    const token = localStorage.getItem('chat-token');
+    const token = localStorage.getItem('token');
 
     if (token === null) {
       navigate('/login');
     }
+
+    setUserName(localStorage.getItem('username'));
 
     const loadData = async () => {
       const instance = axios.create({
@@ -62,8 +78,23 @@ const Main = () => {
     loadData();
   }, []);
 
+  const messageSubmitHandler = async (data, { resetForm }) => {
+    const { body } = data;
+    const message = {
+      channelId: activeChannelId,
+      body,
+      userName,
+    };
+
+    socket.emit('newMessage', message, (response) => {
+      if (response.status === 'ok') {
+        resetForm();
+      }
+    });
+  };
+
   return (
-    <div className="container-xxl mx-5 my-4 h-100 rounded shadow-lg">
+    <div className="container-xxl mx-5 my-4 h-100 overflow-hidden rounded shadow-lg">
       <div className="row h-100 bg-white flex-md-row">
         <div className="col-4 col-md-2 border-right pt-5 px-0 bg-light">
           <div className="d-flex justify-content-between mb-2 pl-4 pr-2">
@@ -77,7 +108,7 @@ const Main = () => {
           </div>
           <ul className="nav flex-column nav-pills nav-fill px-2">
             <li className="nav-item w-100">
-              {channelsPrepared}
+              {renderChannels(channels, activeChannelId)}
             </li>
           </ul>
         </div>
@@ -92,22 +123,13 @@ const Main = () => {
                 сообщения
               </span>
             </div>
-            <div id="messages-box" className="chat-messages overflow-auto px-5 ">
-              {activeChannelMessages.map((message) => (
-                <div className="text-break mb-2">
-                  <b>{message.username}</b>
-                  {` ${message.body}`}
-                </div>
-              ))}
-            </div>
+            {renderMessages(activeChannelMessages)}
             <div className="mt-auto px-5 py-3">
               <Formik
                 initialValues={{ body: '' }}
-                onSubmit={async (values) => {
-                  console.log(values);
-                }}
+                onSubmit={messageSubmitHandler}
               >
-                {({ isSubmitting }) => (
+                {({ isSubmitting, values }) => (
                   <Form className="py-1 border rounded-2">
                     <div className="input-group has-validation">
                       <Field
@@ -116,7 +138,11 @@ const Main = () => {
                         placeholder="Введите сообщение..."
                         className="border-0 p-0 pl-2 form-control"
                       />
-                      <button type="submit" disabled={isSubmitting} className="btn btn-group-vertical">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || values.body === ''}
+                        className="btn btn-group-vertical"
+                      >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="20" height="20" fill="currentColor">
                           <path
                             fillRule="evenodd"
