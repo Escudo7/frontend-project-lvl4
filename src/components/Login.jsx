@@ -29,8 +29,9 @@ const Login = () => {
       initialValues={{ username: '', password: '' }}
       onSubmit={async (values, { setErrors }) => {
         try {
-          const { data: { token } } = await axios.post('/api/v1/login', values);
-          localStorage.setItem('chat-token', token);
+          const { data: { token, username } } = await axios.post('/api/v1/login', values);
+          localStorage.setItem('token', token);
+          localStorage.setItem('username', username);
           dispatch(logIn());
           navigate('/');
         } catch (e) {
