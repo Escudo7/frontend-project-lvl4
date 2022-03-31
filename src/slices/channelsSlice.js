@@ -14,12 +14,15 @@ const channelsSlice = createSlice({
     loadChannels: (state, { payload }) => {
       state.value.channels = [...payload];
     },
+    addChannel: (state, { payload }) => {
+      state.value.channels = [...state.value.channels, payload];
+    },
     setActiveChannelId: (state, { payload }) => {
       state.value.activeChannelId = payload;
     },
   },
 });
 
-export const { loadChannels, setActiveChannelId } = channelsSlice.actions;
+export const { loadChannels, addChannel, setActiveChannelId } = channelsSlice.actions;
 
 export default channelsSlice.reducer;

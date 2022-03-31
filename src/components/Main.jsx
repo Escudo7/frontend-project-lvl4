@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { logOut } from '../slices/authorizedSlice.js';
-import { loadChannels, setActiveChannelId } from '../slices/channalsSlice.js';
+import { loadChannels, setActiveChannelId } from '../slices/channelsSlice.js';
 import { loadMessages } from '../slices/messagesSlice.js';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
+import modalMap from './modals/index.js';
 
 const Main = ({ socket }) => {
   const dispatch = useDispatch();
@@ -14,6 +15,8 @@ const Main = ({ socket }) => {
 
   const { channels, activeChannelId } = useSelector((state) => state.channels.value);
   const activeChannel = channels.find((channel) => channel.id === activeChannelId);
+
+  const { modalType } = useSelector((state) => state.modal.value);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -44,8 +47,19 @@ const Main = ({ socket }) => {
     loadData();
   }, []);
 
+  const renderModal = (type) => {
+    if (type === null) {
+      return null;
+    }
+
+    const Modal = modalMap(type);
+
+    return <Modal socket={socket} />;
+  };
+
   return (
     <div className="container-xxl mx-5 my-4 h-100 overflow-hidden rounded shadow-lg">
+      {renderModal(modalType)}
       <div className="row h-100 bg-white flex-md-row">
         <Channels channels={channels} activeChannelId={activeChannelId} />
         <Messages activeChannel={activeChannel} socket={socket} />

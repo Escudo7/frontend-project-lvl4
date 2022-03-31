@@ -7,6 +7,7 @@ import NoMatch from './NoMatch.jsx';
 import Main from './Main.jsx';
 import Header from './Header.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
+import { addChannel } from '../slices/channelsSlice.js';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,10 @@ const App = () => {
       const lastMessageBlock = messagesBlock[messagesLength - 1];
       lastMessageBlock.scrollIntoView();
     }
+  });
+
+  socket.on('newChannel', (channel) => {
+    dispatch(addChannel(channel));
   });
 
   return (
