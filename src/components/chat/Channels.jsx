@@ -1,8 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
-import { setActiveChannelId } from '../slices/channelsSlice.js';
-import { openModal } from '../slices/modalSlice.js';
+import { setActiveChannelId } from '../../slices/channelsSlice.js';
+import { openModal } from '../../slices/modalSlice.js';
 
 const Channels = ({ channels, activeChannelId }) => {
   const dispatch = useDispatch();

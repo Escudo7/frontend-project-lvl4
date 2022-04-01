@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
 import Login from './Login.jsx';
 import NoMatch from './NoMatch.jsx';
-import Main from './Main.jsx';
+import Main from './chat/Main.jsx';
 import Header from './Header.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
 import { addChannel } from '../slices/channelsSlice.js';
