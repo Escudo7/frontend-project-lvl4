@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import classNames from 'classnames';
+import { Button, Dropdown, ButtonGroup } from 'react-bootstrap';
 import { setActiveChannelId } from '../../slices/channelsSlice.js';
 import { openModal } from '../../slices/modalSlice.js';
 
@@ -27,20 +27,36 @@ const Channels = ({ channels, activeChannelId }) => {
         </button>
       </div>
       <ul className="nav flex-column nav-pills nav-fill px-2">
-        <li className="nav-item w-100">
-          {channels.map((channel) => {
-            const classes = classNames('w-100', 'rounded-0', 'text-left', 'btn', {
-              'btn-secondary': channel.id === activeChannelId,
-            });
+        {channels.map((channel) => {
+          const variant = channel.id === activeChannelId ? 'secondary' : '';
 
-            return (
-              <button type="button" className={classes} key={channel.id} onClick={setActiveChannelHandler(channel.id)}>
-                <span className="me-1">#</span>
-                {channel.name}
-              </button>
-            );
-          })}
-        </li>
+          return (
+            <Dropdown
+              as={ButtonGroup}
+              key={channel.id}
+              className="d-flex w-100"
+              onClick={setActiveChannelHandler(channel.id)}
+            >
+              <Button variant={variant} className="text-left text-truncate rounded-0 w-100">
+                {`# ${channel.name}`}
+              </Button>
+              {channel.removable && (
+                <>
+                  <Dropdown.Toggle
+                    split
+                    variant={variant}
+                    id={`dropdown-${channel.id}`}
+                    className="flex-grow-0"
+                  />
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="#">Удалить</Dropdown.Item>
+                    <Dropdown.Item href="#">Переименовать</Dropdown.Item>
+                  </Dropdown.Menu>
+                </>
+              )}
+            </Dropdown>
+          );
+        })}
       </ul>
     </div>
   );
