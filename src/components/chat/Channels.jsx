@@ -12,7 +12,11 @@ const Channels = ({ channels, activeChannelId }) => {
   };
 
   const addChannelHandler = () => {
-    dispatch(openModal({ type: 'createChannel' }));
+    dispatch(openModal({ modalType: 'createChannel' }));
+  };
+
+  const channelActionSelectHandler = (channelId) => (modalType) => {
+    dispatch(openModal({ modalType, modalData: { channelId } }));
   };
 
   return (
@@ -35,6 +39,7 @@ const Channels = ({ channels, activeChannelId }) => {
               as={ButtonGroup}
               key={channel.id}
               className="d-flex w-100"
+              onSelect={channelActionSelectHandler(channel.id)}
             >
               <Button
                 variant={variant}
@@ -52,8 +57,8 @@ const Channels = ({ channels, activeChannelId }) => {
                     className="flex-grow-0"
                   />
                   <Dropdown.Menu>
-                    <Dropdown.Item href="#">Удалить</Dropdown.Item>
-                    <Dropdown.Item href="#">Переименовать</Dropdown.Item>
+                    <Dropdown.Item eventKey="deleteChannel">Удалить</Dropdown.Item>
+                    <Dropdown.Item eventKey="renameChannel">Переименовать</Dropdown.Item>
                   </Dropdown.Menu>
                 </>
               )}

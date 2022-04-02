@@ -17,12 +17,24 @@ const channelsSlice = createSlice({
     addChannel: (state, { payload }) => {
       state.value.channels = [...state.value.channels, payload];
     },
+    renameChannel: (state, { payload }) => {
+      const foundedChannel = state.value.channels.find((channel) => channel.id === payload.id);
+
+      if (foundedChannel) {
+        foundedChannel.name = payload.name;
+      }
+    },
     setActiveChannelId: (state, { payload }) => {
       state.value.activeChannelId = payload;
     },
   },
 });
 
-export const { loadChannels, addChannel, setActiveChannelId } = channelsSlice.actions;
+export const {
+  loadChannels,
+  addChannel,
+  renameChannel,
+  setActiveChannelId,
+} = channelsSlice.actions;
 
 export default channelsSlice.reducer;
