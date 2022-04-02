@@ -4,10 +4,10 @@ import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
 import Login from './Login.jsx';
 import NoMatch from './NoMatch.jsx';
-import Main from './Main.jsx';
+import Main from './chat/Main.jsx';
 import Header from './Header.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
-import { addChannel } from '../slices/channelsSlice.js';
+import { addChannel, renameChannel } from '../slices/channelsSlice.js';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -28,6 +28,10 @@ const App = () => {
 
   socket.on('newChannel', (channel) => {
     dispatch(addChannel(channel));
+  });
+
+  socket.on('renameChannel', (channel) => {
+    dispatch(renameChannel(channel));
   });
 
   return (

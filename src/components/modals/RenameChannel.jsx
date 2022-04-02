@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal } from 'react-bootstrap';
 import * as Yup from 'yup';
@@ -11,7 +11,6 @@ import {
 import classNames from 'classnames';
 import _ from 'lodash';
 import { closeModal } from '../../slices/modalSlice.js';
-import { setActiveChannelId } from '../../slices/channelsSlice.js';
 
 const CreateChannel = ({ socket }) => {
   const dispatch = useDispatch();
@@ -21,28 +20,37 @@ const CreateChannel = ({ socket }) => {
   };
 
   const { channels } = useSelector((state) => state.channels.value);
+  const { modalData } = useSelector((state) => state.modal.value);
+  const currentChannel = channels.find((c) => c.id === modalData.channelId);
 
-  const addChannelSchema = Yup.object().shape({
+  const renameChannelSchema = Yup.object().shape({
     channelName: Yup.string()
       .required('Обязательное поле')
       .test('unique', 'Должно быть уникальным', (value) => (
-        !channels.find((channel) => channel.name === value?.trim())
+        !channels.find((c) => c.name === value?.trim())
       )),
+  });
+
+  const inputChannelName = useRef(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      inputChannelName.current.select();
+    });
   });
 
   return (
     <Formik
-      initialValues={{ channelName: '' }}
+      initialValues={{ channelName: currentChannel.name }}
       onSubmit={async ({ channelName }) => {
-        const channel = { name: channelName };
-        socket.emit('newChannel', channel, ({ status, data }) => {
+        const channel = { id: modalData.channelId, name: channelName };
+        socket.emit('renameChannel', channel, ({ status }) => {
           if (status === 'ok') {
             dispatch(closeModal());
-            dispatch(setActiveChannelId(data.id));
           }
         });
       }}
-      validationSchema={addChannelSchema}
+      validationSchema={renameChannelSchema}
       validateOnChange={false}
       validateOnBlur={false}
     >
@@ -52,13 +60,13 @@ const CreateChannel = ({ socket }) => {
         });
 
         return (
-          <Modal show>
+          <Modal show autoFocus={false}>
             <Modal.Header>
-              <Modal.Title>Добавить канал</Modal.Title>
+              <Modal.Title>Переименовать канал</Modal.Title>
             </Modal.Header>
             <Form>
               <Modal.Body>
-                <Field type="text" name="channelName" className={channelNameClasses} autoFocus />
+                <Field type="text" name="channelName" className={channelNameClasses} autoFocus innerRef={inputChannelName}/>
                 <ErrorMessage name="channelName" component="div" className="invalid-feedback" />
               </Modal.Body>
               <Modal.Footer>

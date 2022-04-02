@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { logOut } from '../slices/authorizedSlice.js';
-import { loadChannels, setActiveChannelId } from '../slices/channelsSlice.js';
-import { loadMessages } from '../slices/messagesSlice.js';
+import { logOut } from '../../slices/authorizedSlice.js';
+import { loadChannels, setActiveChannelId } from '../../slices/channelsSlice.js';
+import { loadMessages } from '../../slices/messagesSlice.js';
 import Channels from './Channels.jsx';
 import Messages from './Messages.jsx';
-import modalMap from './modals/index.js';
+import modalMap from '../modals/index.js';
 
 const Main = ({ socket }) => {
   const dispatch = useDispatch();
