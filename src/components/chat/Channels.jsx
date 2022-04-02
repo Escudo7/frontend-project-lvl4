@@ -12,7 +12,7 @@ const Channels = ({ channels, activeChannelId }) => {
   };
 
   const addChannelHandler = () => {
-    dispatch(openModal('createChannel'));
+    dispatch(openModal({ type: 'createChannel' }));
   };
 
   return (
