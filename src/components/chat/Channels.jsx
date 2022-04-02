@@ -35,9 +35,12 @@ const Channels = ({ channels, activeChannelId }) => {
               as={ButtonGroup}
               key={channel.id}
               className="d-flex w-100"
-              onClick={setActiveChannelHandler(channel.id)}
             >
-              <Button variant={variant} className="text-left text-truncate rounded-0 w-100">
+              <Button
+                variant={variant}
+                className="text-left text-truncate rounded-0 w-100"
+                onClick={setActiveChannelHandler(channel.id)}
+              >
                 {`# ${channel.name}`}
               </Button>
               {channel.removable && (
