@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button, Modal } from 'react-bootstrap';
 import * as Yup from 'yup';
 import {
   Formik,
@@ -42,6 +43,8 @@ const CreateChannel = ({ socket }) => {
         });
       }}
       validationSchema={addChannelSchema}
+      validateOnChange={false}
+      validateOnBlur={false}
     >
       {({ isSubmitting, errors }) => {
         const channelNameClasses = classNames('form-control', {
@@ -49,41 +52,25 @@ const CreateChannel = ({ socket }) => {
         });
 
         return (
-          <Form>
-            <div className="fade modal-backdrop show" />
-            <div
-              role="dialog"
-              className="modal fade show"
-              id="createChannel"
-              tabIndex="-1"
-              aria-labelledby="createChannelLabel"
-              style={{ display: 'block' }}
-              aria-modal
-            >
-              <div className="modal-dialog">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title" id="createChannelLabel">Добавить канал</h5>
-                    <button type="button" className="btn close" data-bs-dismiss="modal" aria-label="Close" onClick={closeHandler}>
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    <Field type="text" name="channelName" className={channelNameClasses} autoFocus />
-                    <ErrorMessage name="channelName" component="div" className="invalid-feedback" />
-                  </div>
-                  <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={closeHandler}>
-                      Отменить
-                    </button>
-                    <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                      Отправить
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Form>
+          <Modal show>
+            <Modal.Header>
+              <Modal.Title>Добавить канал</Modal.Title>
+            </Modal.Header>
+            <Form>
+              <Modal.Body>
+                <Field type="text" name="channelName" className={channelNameClasses} autoFocus />
+                <ErrorMessage name="channelName" component="div" className="invalid-feedback" />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={closeHandler}>
+                  Отменить
+                </Button>
+                <Button variant="primary" disabled={isSubmitting} type="submit">
+                  Отправить
+                </Button>
+              </Modal.Footer>
+            </Form>
+          </Modal>
         );
       }}
     </Formik>
