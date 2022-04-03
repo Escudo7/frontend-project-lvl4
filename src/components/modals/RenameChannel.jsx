@@ -23,6 +23,10 @@ const CreateChannel = ({ socket }) => {
   const { modalData } = useSelector((state) => state.modal.value);
   const currentChannel = channels.find((c) => c.id === modalData.channelId);
 
+  if (!currentChannel) {
+    return null;
+  }
+
   const renameChannelSchema = Yup.object().shape({
     channelName: Yup.string()
       .required('Обязательное поле')
@@ -66,7 +70,7 @@ const CreateChannel = ({ socket }) => {
             </Modal.Header>
             <Form>
               <Modal.Body>
-                <Field type="text" name="channelName" className={channelNameClasses} autoFocus innerRef={inputChannelName}/>
+                <Field type="text" name="channelName" className={channelNameClasses} autoFocus innerRef={inputChannelName} />
                 <ErrorMessage name="channelName" component="div" className="invalid-feedback" />
               </Modal.Body>
               <Modal.Footer>
