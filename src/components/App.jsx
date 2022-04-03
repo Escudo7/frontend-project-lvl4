@@ -6,6 +6,7 @@ import Login from './Login.jsx';
 import NoMatch from './NoMatch.jsx';
 import Main from './chat/Main.jsx';
 import Header from './Header.jsx';
+import SignUp from './SignUp.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
 import { addChannel, renameChannel, removeChannel } from '../slices/channelsSlice.js';
 
@@ -44,6 +45,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Main socket={socket} />} />
         <Route path="login" element={<Login />} />
+        <Route path="signup" element={<SignUp />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </BrowserRouter>

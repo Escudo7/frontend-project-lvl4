@@ -1,43 +1,49 @@
 import React from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import {
-  Formik,
-  Form,
-  Field,
   ErrorMessage,
+  Field,
+  Form,
+  Formik,
 } from 'formik';
-import * as Yup from 'yup';
+import axios from 'axios';
 import classNames from 'classnames';
 import _ from 'lodash';
+import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
-const loginSchema = Yup.object().shape({
+const signUpSchema = Yup.object().shape({
   username: Yup.string()
-    .required('Обязательное поле'),
+    .required('Обязательное поле')
+    .min(3, 'От 3 до 20 символов')
+    .max(20, 'От 3 до 20 символов'),
   password: Yup.string()
-    .required('Обязятельное поле'),
+    .required('Обязятельное поле')
+    .min(6, 'От 6 символов'),
+  confirmPassword: Yup.string()
+    .required('Обязятельное поле')
+    .oneOf([Yup.ref('password')], 'Пароли должны совпадать'),
 });
 
-const Login = () => {
+const SignUp = () => {
   const navigate = useNavigate();
 
   return (
     <Formik
-      initialValues={{ username: '', password: '' }}
+      initialValues={{ username: '', password: '', confirmPassword: '' }}
       onSubmit={async (values, { setErrors }) => {
         try {
-          const { data: { token, username } } = await axios.post('/api/v1/login', values);
+          const { data: { token, username } } = await axios.post('/api/v1/signup', values);
           localStorage.setItem('token', token);
           localStorage.setItem('username', username);
           navigate('/');
         } catch (e) {
           setErrors({
-            username: '',
-            password: 'Неверные имя пользователя или пароль',
+            username: 'Такой пользователь уже существует',
+            password: '',
           });
         }
       }}
-      validationSchema={loginSchema}
+      validationSchema={signUpSchema}
     >
       {({ isSubmitting, errors }) => {
         const userNameClasses = classNames('form-control', {
@@ -46,10 +52,14 @@ const Login = () => {
         const passwordClasses = classNames('form-control', {
           'is-invalid': _.has(errors, 'password'),
         });
+        const confirmPasswordClasses = classNames('form-control', {
+          'is-invalid': _.has(errors, 'confirmPassword'),
+        });
+
         return (
           <div className="container">
             <div className="row justify-content-md-center">
-              <h3>Вход</h3>
+              <h3>Регистрация</h3>
             </div>
             <div className="row justify-content-md-center">
               <Form className="needs-validation col-md-4">
@@ -61,14 +71,14 @@ const Login = () => {
                   <Field type="password" name="password" className={passwordClasses} placeholder="пароль" required />
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
                 </div>
+                <div className="form-group">
+                  <Field type="password" name="confirmPassword" className={confirmPasswordClasses} placeholder="подтвердите пароль" required />
+                  <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
+                </div>
                 <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                  Войти
+                  Зарегистрироваться
                 </button>
               </Form>
-            </div>
-            <div className="text-center mt-3">
-              {'Нет аккаунта? '}
-              <a href="/signup">Регистрация</a>
             </div>
           </div>
         );
@@ -77,4 +87,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
