@@ -1,17 +1,17 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logOut } from '../slices/authorizedSlice.js';
 
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  const isAuthorized = useSelector((state) => state.authorized.value);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthorized(token !== null);
+  });
 
   const onClickHandler = () => {
-    localStorage.removeItem('chat-token');
-    dispatch(logOut());
+    localStorage.removeItem('token');
     navigate('/login');
   };
 
