@@ -24,6 +24,10 @@ const channelsSlice = createSlice({
         foundedChannel.name = payload.name;
       }
     },
+    removeChannel: (state, { payload }) => {
+      state.value.channels = state.value.channels.filter((channel) => channel.id !== payload.id);
+      state.value.activeChannelId = state.value.channels?.[0]?.id ?? null;
+    },
     setActiveChannelId: (state, { payload }) => {
       state.value.activeChannelId = payload;
     },
@@ -34,6 +38,7 @@ export const {
   loadChannels,
   addChannel,
   renameChannel,
+  removeChannel,
   setActiveChannelId,
 } = channelsSlice.actions;
 

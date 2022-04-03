@@ -7,7 +7,7 @@ import NoMatch from './NoMatch.jsx';
 import Main from './chat/Main.jsx';
 import Header from './Header.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
-import { addChannel, renameChannel } from '../slices/channelsSlice.js';
+import { addChannel, renameChannel, removeChannel } from '../slices/channelsSlice.js';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -32,6 +32,10 @@ const App = () => {
 
   socket.on('renameChannel', (channel) => {
     dispatch(renameChannel(channel));
+  });
+
+  socket.on('removeChannel', (data) => {
+    dispatch(removeChannel(data));
   });
 
   return (
