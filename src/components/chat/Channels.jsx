@@ -57,7 +57,7 @@ const Channels = ({ channels, activeChannelId }) => {
                     className="flex-grow-0"
                   />
                   <Dropdown.Menu>
-                    <Dropdown.Item eventKey="deleteChannel">Удалить</Dropdown.Item>
+                    <Dropdown.Item eventKey="removeChannel">Удалить</Dropdown.Item>
                     <Dropdown.Item eventKey="renameChannel">Переименовать</Dropdown.Item>
                   </Dropdown.Menu>
                 </>

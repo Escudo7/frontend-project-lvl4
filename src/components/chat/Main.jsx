@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { logOut } from '../../slices/authorizedSlice.js';
 import { loadChannels, setActiveChannelId } from '../../slices/channelsSlice.js';
 import { loadMessages } from '../../slices/messagesSlice.js';
 import Channels from './Channels.jsx';
@@ -39,7 +38,6 @@ const Main = ({ socket }) => {
       } catch (e) {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
-        dispatch(logOut());
         navigate('/login');
       }
     };

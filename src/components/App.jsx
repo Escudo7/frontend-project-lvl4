@@ -6,8 +6,9 @@ import Login from './Login.jsx';
 import NoMatch from './NoMatch.jsx';
 import Main from './chat/Main.jsx';
 import Header from './Header.jsx';
+import SignUp from './SignUp.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
-import { addChannel, renameChannel } from '../slices/channelsSlice.js';
+import { addChannel, renameChannel, removeChannel } from '../slices/channelsSlice.js';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -34,12 +35,17 @@ const App = () => {
     dispatch(renameChannel(channel));
   });
 
+  socket.on('removeChannel', (data) => {
+    dispatch(removeChannel(data));
+  });
+
   return (
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path="/" element={<Main socket={socket} />} />
         <Route path="login" element={<Login />} />
+        <Route path="signup" element={<SignUp />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </BrowserRouter>
