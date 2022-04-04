@@ -10,10 +10,12 @@ import {
 } from 'formik';
 import classNames from 'classnames';
 import _ from 'lodash';
+import { useTranslation } from 'react-i18next';
 import { closeModal } from '../../slices/modalSlice.js';
 
 const CreateChannel = ({ socket }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const closeHandler = () => {
     dispatch(closeModal());
@@ -29,8 +31,8 @@ const CreateChannel = ({ socket }) => {
 
   const renameChannelSchema = Yup.object().shape({
     channelName: Yup.string()
-      .required('Обязательное поле')
-      .test('unique', 'Должно быть уникальным', (value) => (
+      .required(t('errors.required'))
+      .test('unique', t('errors.unique'), (value) => (
         !channels.find((c) => c.name === value?.trim())
       )),
   });
@@ -66,7 +68,7 @@ const CreateChannel = ({ socket }) => {
         return (
           <Modal show autoFocus={false}>
             <Modal.Header>
-              <Modal.Title>Переименовать канал</Modal.Title>
+              <Modal.Title>{t('chat.renameChannel')}</Modal.Title>
             </Modal.Header>
             <Form>
               <Modal.Body>
@@ -75,10 +77,10 @@ const CreateChannel = ({ socket }) => {
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={closeHandler}>
-                  Отменить
+                  {t('buttons.cancel')}
                 </Button>
                 <Button variant="primary" disabled={isSubmitting} type="submit">
-                  Отправить
+                  {t('buttons.send')}
                 </Button>
               </Modal.Footer>
             </Form>

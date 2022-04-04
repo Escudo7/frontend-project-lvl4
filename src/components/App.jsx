@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 import Login from './Login.jsx';
 import NoMatch from './NoMatch.jsx';
 import Main from './chat/Main.jsx';
@@ -9,6 +11,18 @@ import Header from './Header.jsx';
 import SignUp from './SignUp.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
 import { addChannel, renameChannel, removeChannel } from '../slices/channelsSlice.js';
+import resources from '../lng/index.js';
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: 'ru',
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false,
+    },
+  });
 
 const App = () => {
   const dispatch = useDispatch();

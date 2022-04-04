@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Field, Form, Formik } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 const Messages = ({ activeChannel, socket }) => {
   const [userName, setUserName] = useState(null);
+  const { t } = useTranslation();
 
   const messages = useSelector((state) => state.messages.value);
   const activeChannelMessages = messages.filter(
@@ -37,8 +39,7 @@ const Messages = ({ activeChannel, socket }) => {
             <b>{activeChannel && `# ${activeChannel.name}`}</b>
           </p>
           <span className="text-muted">
-            {`${activeChannelMessages.length} `}
-            сообщения
+            {t('chat.message', { count: activeChannelMessages.length })}
           </span>
         </div>
         <div id="messages-box" className="overflow-auto px-5 mr-3">
@@ -59,8 +60,8 @@ const Messages = ({ activeChannel, socket }) => {
                 <div className="input-group has-validation">
                   <Field
                     name="body"
-                    aria-label="Новое сообщение"
-                    placeholder="Введите сообщение..."
+                    aria-label={t('chat.newMessage')}
+                    placeholder={t('chat.typeNewMessage')}
                     className="border-0 p-0 pl-2 form-control"
                   />
                   <button

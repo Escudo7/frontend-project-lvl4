@@ -10,16 +10,18 @@ import {
 import * as Yup from 'yup';
 import classNames from 'classnames';
 import _ from 'lodash';
-
-const loginSchema = Yup.object().shape({
-  username: Yup.string()
-    .required('Обязательное поле'),
-  password: Yup.string()
-    .required('Обязятельное поле'),
-});
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const loginSchema = Yup.object().shape({
+    username: Yup.string()
+      .required(t('errors.required')),
+    password: Yup.string()
+      .required(t('errors.required')),
+  });
 
   return (
     <Formik
@@ -33,7 +35,7 @@ const Login = () => {
         } catch (e) {
           setErrors({
             username: '',
-            password: 'Неверные имя пользователя или пароль',
+            password: t('errors.logIn'),
           });
         }
       }}
@@ -49,26 +51,26 @@ const Login = () => {
         return (
           <div className="container">
             <div className="row justify-content-md-center">
-              <h3>Вход</h3>
+              <h3>{t('signIn')}</h3>
             </div>
             <div className="row justify-content-md-center">
               <Form className="needs-validation col-md-4">
                 <div className="form-group">
-                  <Field type="text" name="username" className={userNameClasses} placeholder="логин" required />
+                  <Field type="text" name="username" className={userNameClasses} placeholder={t('userName')} required />
                   <ErrorMessage name="username" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <Field type="password" name="password" className={passwordClasses} placeholder="пароль" required />
+                  <Field type="password" name="password" className={passwordClasses} placeholder={t('password')} required />
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
                 </div>
                 <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                  Войти
+                  {t('buttons.logIn')}
                 </button>
               </Form>
             </div>
             <div className="text-center mt-3">
-              {'Нет аккаунта? '}
-              <a href="/signup">Регистрация</a>
+              {`${t('notAccount')} `}
+              <a href="/signup">{t('signUp')}</a>
             </div>
           </div>
         );
