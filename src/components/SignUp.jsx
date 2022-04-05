@@ -10,22 +10,24 @@ import classNames from 'classnames';
 import _ from 'lodash';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-
-const signUpSchema = Yup.object().shape({
-  username: Yup.string()
-    .required('Обязательное поле')
-    .min(3, 'От 3 до 20 символов')
-    .max(20, 'От 3 до 20 символов'),
-  password: Yup.string()
-    .required('Обязятельное поле')
-    .min(6, 'От 6 символов'),
-  confirmPassword: Yup.string()
-    .required('Обязятельное поле')
-    .oneOf([Yup.ref('password')], 'Пароли должны совпадать'),
-});
+import { useTranslation } from 'react-i18next';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const signUpSchema = Yup.object().shape({
+    username: Yup.string()
+      .required(t('errors.required'))
+      .min(3, t('errors.userNameLength'))
+      .max(20, t('errors.userNameLength')),
+    password: Yup.string()
+      .required(t('errors.required'))
+      .min(6, t('errors.password')),
+    confirmPassword: Yup.string()
+      .required(t('errors.required'))
+      .oneOf([Yup.ref('password')], t('errors.passwordConfirmation')),
+  });
 
   return (
     <Formik
@@ -38,7 +40,7 @@ const SignUp = () => {
           navigate('/');
         } catch (e) {
           setErrors({
-            username: 'Такой пользователь уже существует',
+            username: t('errors.userNameExists'),
             password: '',
           });
         }
@@ -59,24 +61,24 @@ const SignUp = () => {
         return (
           <div className="container">
             <div className="row justify-content-md-center">
-              <h3>Регистрация</h3>
+              <h3>{t('signUp')}</h3>
             </div>
             <div className="row justify-content-md-center">
               <Form className="needs-validation col-md-4">
                 <div className="form-group">
-                  <Field type="text" name="username" className={userNameClasses} placeholder="логин" required />
+                  <Field type="text" name="username" className={userNameClasses} placeholder={t('userName')} required />
                   <ErrorMessage name="username" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <Field type="password" name="password" className={passwordClasses} placeholder="пароль" required />
+                  <Field type="password" name="password" className={passwordClasses} placeholder={t('password')} required />
                   <ErrorMessage name="password" component="div" className="invalid-feedback" />
                 </div>
                 <div className="form-group">
-                  <Field type="password" name="confirmPassword" className={confirmPasswordClasses} placeholder="подтвердите пароль" required />
+                  <Field type="password" name="confirmPassword" className={confirmPasswordClasses} placeholder={t('passwordConfirmation')} required />
                   <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
                 </div>
                 <button type="submit" disabled={isSubmitting} className="btn btn-primary">
-                  Зарегистрироваться
+                  {t('buttons.singUp')}
                 </button>
               </Form>
             </div>
