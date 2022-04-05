@@ -4,6 +4,8 @@ import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import Login from './Login.jsx';
 import NoMatch from './NoMatch.jsx';
 import Main from './chat/Main.jsx';
@@ -26,6 +28,7 @@ i18n
 
 const App = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const socket = io();
 
@@ -43,18 +46,26 @@ const App = () => {
 
   socket.on('newChannel', (channel) => {
     dispatch(addChannel(channel));
+    toast.success(t('messages.addChannel'));
   });
 
   socket.on('renameChannel', (channel) => {
     dispatch(renameChannel(channel));
+    toast.success(t('messages.renameChannel'));
   });
 
   socket.on('removeChannel', (data) => {
     dispatch(removeChannel(data));
+    toast.success(t('messages.removeChannel'));
+  });
+
+  socket.on('connect_error', () => {
+    toast.error(t('messages. connectionError'));
   });
 
   return (
     <BrowserRouter>
+      <ToastContainer />
       <Header />
       <Routes>
         <Route path="/" element={<Main socket={socket} />} />

@@ -42,5 +42,11 @@ export default {
       logIn: 'Войти',
       singUp: 'Зарегистрироваться',
     },
+    messages: {
+      addChannel: 'Канал добавлен',
+      renameChannel: 'Канал переименован',
+      removeChannel: 'Канал удален',
+      connectionError: 'Ошибка соединения',
+    },
   },
 };
