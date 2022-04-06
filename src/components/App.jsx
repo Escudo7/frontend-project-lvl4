@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import { initReactI18next, useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
+import { Provider, ErrorBoundary } from '@rollbar/react';
 import Login from './Login.jsx';
 import NoMatch from './NoMatch.jsx';
 import Main from './chat/Main.jsx';
@@ -14,6 +14,7 @@ import SignUp from './SignUp.jsx';
 import { addMessage } from '../slices/messagesSlice.js';
 import { addChannel, renameChannel, removeChannel } from '../slices/channelsSlice.js';
 import resources from '../lng/index.js';
+import rollbarConfig from '../../rollbar.config.js';
 
 i18n
   .use(initReactI18next)
@@ -64,16 +65,20 @@ const App = () => {
   });
 
   return (
-    <BrowserRouter>
-      <ToastContainer />
-      <Header />
-      <Routes>
-        <Route path="/" element={<Main socket={socket} />} />
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<SignUp />} />
-        <Route path="*" element={<NoMatch />} />
-      </Routes>
-    </BrowserRouter>
+    <Provider config={rollbarConfig}>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <ToastContainer />
+          <Header />
+          <Routes>
+            <Route path="/" element={<Main socket={socket} />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="*" element={<NoMatch />} />
+          </Routes>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </Provider>
   );
 };
 
