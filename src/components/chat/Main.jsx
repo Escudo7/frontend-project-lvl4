@@ -38,7 +38,6 @@ const Main = ({ socket }) => {
       } catch (e) {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
-        navigate('/login');
       }
     };
 
