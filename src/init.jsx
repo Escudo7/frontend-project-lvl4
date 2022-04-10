@@ -7,6 +7,8 @@ import '../assets/application.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import App from './components/App.jsx';
 
-export default (socket = io()) => (
+const Init = (socket = io()) => (
   <App socket={socket} />
 );
+
+export default Init;
