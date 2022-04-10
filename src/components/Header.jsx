@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Navbar, Container } from 'react-bootstrap';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,16 +19,16 @@ const Header = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white">
-      <div className="container-fluid ml-3">
-        <a className="navbar-brand" href="/">Hexlet Chat</a>
+    <Navbar bg="light" expand="lg" className="bg-white shadow-sm align-items-center">
+      <Container fluid>
+        <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
         {isAuthorized && (
           <button type="button" className="btn btn-primary mr-3" onClick={onClickHandler}>
             {t('buttons.logOut')}
           </button>
         )}
-      </div>
-    </nav>
+      </Container>
+    </Navbar>
   );
 };
 

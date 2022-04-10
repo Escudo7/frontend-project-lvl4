@@ -37,14 +37,6 @@ const CreateChannel = ({ socket }) => {
       )),
   });
 
-  const inputChannelName = useRef(null);
-
-  useEffect(() => {
-    setTimeout(() => {
-      inputChannelName.current.select();
-    });
-  });
-
   return (
     <Formik
       initialValues={{ channelName: currentChannel.name }}
@@ -72,8 +64,9 @@ const CreateChannel = ({ socket }) => {
             </Modal.Header>
             <Form>
               <Modal.Body>
-                <Field type="text" name="channelName" className={channelNameClasses} autoFocus innerRef={inputChannelName} />
-                <ErrorMessage name="channelName" component="div" className="invalid-feedback" />
+                <Field id="channelName" type="text" name="channelName" className={channelNameClasses} autoFocus />
+                <label className="sr-only" htmlFor="channelName">{t('chat.channelName')}</label>
+                <ErrorMessage name="channelName" component="div" className="invalid-feedback" htmlFor="channelName" />
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={closeHandler}>

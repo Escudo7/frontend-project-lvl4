@@ -59,23 +59,26 @@ const SignUp = () => {
         });
 
         return (
-          <div className="container">
+          <div className="container  mt-4">
             <div className="row justify-content-md-center">
               <h3>{t('signUp')}</h3>
             </div>
             <div className="row justify-content-md-center">
               <Form className="needs-validation col-md-4">
                 <div className="form-group">
-                  <Field type="text" name="username" className={userNameClasses} placeholder={t('userName')} required />
-                  <ErrorMessage name="username" component="div" className="invalid-feedback" />
+                  <Field id="username" type="text" name="username" className={userNameClasses} placeholder={t('userName')} required />
+                  <label className="sr-only" htmlFor="username">{t('userName')}</label>
+                  <ErrorMessage name="username" component="div" className="invalid-feedback" htmlFor="username" />
                 </div>
                 <div className="form-group">
-                  <Field type="password" name="password" className={passwordClasses} placeholder={t('password')} required />
-                  <ErrorMessage name="password" component="div" className="invalid-feedback" />
+                  <Field id="password" type="password" name="password" className={passwordClasses} placeholder={t('password')} required />
+                  <label className="sr-only" htmlFor="password">{t('password')}</label>
+                  <ErrorMessage name="password" component="div" className="invalid-feedback" htmlFor="password" />
                 </div>
                 <div className="form-group">
-                  <Field type="password" name="confirmPassword" className={confirmPasswordClasses} placeholder={t('passwordConfirmation')} required />
-                  <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
+                  <Field id="confirmPassword" type="password" name="confirmPassword" className={confirmPasswordClasses} placeholder={t('passwordConfirmation')} required />
+                  <label className="sr-only" htmlFor="confirmPassword">{t('passwordConfirmation')}</label>
+                  <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" htmlFor="confirmPassword" />
                 </div>
                 <button type="submit" disabled={isSubmitting} className="btn btn-primary">
                   {t('buttons.singUp')}

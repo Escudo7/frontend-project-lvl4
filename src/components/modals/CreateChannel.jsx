@@ -58,10 +58,20 @@ const CreateChannel = ({ socket }) => {
             <Modal.Header>
               <Modal.Title>{t('chat.addChannel')}</Modal.Title>
             </Modal.Header>
-            <Form>
+            <Form className="needs-validation">
               <Modal.Body>
-                <Field type="text" name="channelName" className={channelNameClasses} autoFocus />
-                <ErrorMessage name="channelName" component="div" className="invalid-feedback" />
+                <div className="form-group">
+                  <Field
+                    id="channelName"
+                    type="text"
+                    name="channelName"
+                    className={channelNameClasses}
+                    placeholder={t('chat.channelName')}
+                    autoFocus
+                  />
+                  <label className="sr-only" htmlFor="channelName">{t('chat.channelName')}</label>
+                  <ErrorMessage name="channelName" component="div" className="invalid-feedback" htmlFor="channelName" />
+                </div>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={closeHandler}>
